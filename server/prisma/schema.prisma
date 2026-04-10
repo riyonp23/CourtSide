@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Position {
+  OH
+  MB
+  S
+  L
+  OPP
+  DS
+}
+
+enum ClassYear {
+  FR
+  SO
+  JR
+  SR
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  ncaaId      String   @unique
+  name        String
+  conference  String
+  division    String   @default("D1")
+  logoUrl     String?
+  season      String
+  wins        Int      @default(0)
+  losses      Int      @default(0)
+  confWins       Int      @default(0)
+  confLosses     Int      @default(0)
+  coachesPollRank Int?
+  nationalTitles Int      @default(0)
+  titleYears     String?
+  createdAt      DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  players     Player[]
+  homeMatches Match[]  @relation("HomeTeam")
+  awayMatches Match[]  @relation("AwayTeam")
+
+  @@index([conference])
+  @@index([season])
+}
+
+model Player {
+  id        String    @id @default(cuid())
+  ncaaId    String    @unique
+  name      String
+  teamId    String
+  team      Team      @relation(fields: [teamId], references: [id])
+  position  Position
+  jersey    String?
+  classYear ClassYear
+  season    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  seasonStats PlayerSeasonStats[]
+
+  @@index([teamId])
+  @@index([season])
+}
+
+model Match {
+  id         String   @id @default(cuid())
+  ncaaId     String   @unique
+  homeTeamId String
+  homeTeam   Team     @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeamId String
+  awayTeam   Team     @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  date       DateTime
+  homeScore  Int
+  awayScore  Int
+  homeSets   Int
+  awaySets   Int
+  location   String?
+  season     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+  @@index([season])
+  @@index([date])
+}
+
+model PlayerSeasonStats {
+  id            String   @id @default(cuid())
+  playerId      String
+  player        Player   @relation(fields: [playerId], references: [id])
+  season        String
+  setsPlayed    Int      @default(0)
+  kills         Int      @default(0)
+  killsPerSet   Float    @default(0)
+  hittingPct    Float    @default(0)
+  assists       Int      @default(0)
+  assistsPerSet Float    @default(0)
+  aces          Int      @default(0)
+  acesPerSet    Float    @default(0)
+  digs          Int      @default(0)
+  digsPerSet    Float    @default(0)
+  blocks        Float    @default(0)
+  blocksPerSet  Float    @default(0)
+  points        Float    @default(0)
+  pointsPerSet  Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([playerId, season])
+  @@index([playerId])
+  @@index([season])
+}

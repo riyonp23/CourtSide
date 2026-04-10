@@ -1,0 +1,18 @@
+{
+  "name": "courtside",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["client", "server", "scraper"],
+  "scripts": {
+    "dev:client": "npm run dev --workspace=client",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:all": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "db:migrate": "npm run migrate --workspace=server",
+    "db:seed": "npm run scrape --workspace=scraper",
+    "scrape": "npm run scrape --workspace=scraper"
+  },
+  "devDependencies": {
+    "concurrently": "9.1.2",
+    "typescript": "5.7.3"
+  }
+}

@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply bg-surface-950 text-white font-outfit antialiased;
+  }
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-fade {
+  animation: pageFadeIn 0.25s ease-out;
+}
+
+@keyframes toastFade {
+  0% { opacity: 0; transform: translate(-50%, 4px); }
+  10% { opacity: 1; transform: translate(-50%, 0); }
+  80% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -4px); }
+}
+
+.share-toast {
+  animation: toastFade 2s ease-out forwards;
+}
+
+@keyframes spotlightGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.1), 0 0 30px rgba(245, 158, 11, 0.05); }
+  50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2), 0 0 40px rgba(245, 158, 11, 0.1); }
+}
+
+.spotlight-glow {
+  animation: spotlightGlow 3s ease-in-out infinite;
+}
